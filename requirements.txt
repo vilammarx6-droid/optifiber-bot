@@ -1,0 +1,15 @@
+# --- LIBRERÍAS OBLIGATORIAS ---
+# Streamlit: Nos permite crear toda la interfaz web sin usar HTML/CSS.
+streamlit
+
+# Pandas: Excelente para manipular y limpiar la base de datos CSV.
+pandas
+
+# LangChain y Cohere: Son el cerebro. Conectan nuestra app con el motor de IA de Cohere.
+langchain-cohere
+
+# Dotenv: Fundamental para leer el archivo secreto .env donde guardamos contraseñas.
+python-dotenv
+
+# Tabulate: Pequeña librería para ayudar a que la IA dibuje las tablas de cotización.
+tabulate
