@@ -12,7 +12,7 @@ Para armar esto usé algunas herramientas que fuimos viendo y otras que investig
 
 ## Link del Proyecto (Deploy)
 Aquí pueden probar el bot funcionando en la nube de Streamlit sin instalar nada:
-👉 **[https://optifiber-bot.streamlit.app/](https://optifiber-bot.streamlit.app/)**
+👉 **[https://optifiber-bot-nansjpmb8nw9bdpqk52nsb.streamlit.app](https://optifiber-bot-nansjpmb8nw9bdpqk52nsb.streamlit.app)**
 
 ## ¿Cómo correrlo en tu compu?
 Si quieres probar el código en local, estos son los pasos:
