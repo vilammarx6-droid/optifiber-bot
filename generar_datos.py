@@ -48,6 +48,8 @@ for i in range(1, 151):
     
     productos.append([nombre, categoria, precio, stock, descripcion])
 
-df = pd.DataFrame(productos, columns=["Producto", "Categoria", "Precio_USD", "Stock_Actual", "Descripcion"])
+df = pd.DataFrame(productos, columns=["Producto", "Categoria", "Precio_PEN", "Stock_Actual", "Descripcion"])
+# Multiplicamos el precio por 3.8 para simular Soles Peruanos (PEN)
+df['Precio_PEN'] = (df['Precio_PEN'] * 3.8).round(2)
 df.to_csv("data/inventario.csv", index=False)
 print("Generados 150 productos 100% basados en optifiber.pe")
