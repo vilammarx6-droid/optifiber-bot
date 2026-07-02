@@ -51,12 +51,16 @@ REGLAS ESTRICTAS:
 5. Responde como un consultor técnico amable, sin evasivas ni rodeos.
 """
 
-    def invoke(self, question: str) -> str:
+    def invoke(self, messages_history: list) -> str:
         """
-        Esta función recibe la pregunta del usuario, la une con las reglas del sistema
-        y le pide a Cohere que genere una respuesta.
+        Esta función recibe el historial de conversación, lo une con las reglas del sistema
+        y le pide a Cohere que genere una respuesta manteniendo el contexto.
         """
-        prompt = f"{self.system_message}\n\nPregunta del Cliente: {question}"
+        prompt = f"{self.system_message}\n\nHISTORIAL DE LA CONVERSACIÓN:\n"
+        for msg in messages_history:
+            role = "Cliente" if msg["role"] == "user" else "OptiBot"
+            prompt += f"{role}: {msg['content']}\n"
+            
         response = self.llm.invoke(prompt)
         return response.content
 
@@ -98,18 +102,21 @@ def main() -> None:
 
     # Si nos mandaron una pregunta por comando de consola, la respondemos y salimos
     if args.pregunta:
-        respuesta = agente.invoke(args.pregunta)
+        respuesta = agente.invoke([{"role": "user", "content": args.pregunta}])
         print("=" * 60)
         print(respuesta)
         return
 
     # Si no nos mandaron parámetros, abrimos un chat interactivo eterno en la terminal
-    print("Modo interactivo (Backend). Escribe 'salir' para terminar.\n")
+    print("Modo interactivo con MEMORIA (Backend). Escribe 'salir' para terminar.\n")
+    historial = []
     while True:
         pregunta = input("Tu pregunta: ").strip()
         if not pregunta or pregunta.lower() in {"salir", "exit", "quit"}:
             break
-        respuesta = agente.invoke(pregunta)
+        historial.append({"role": "user", "content": pregunta})
+        respuesta = agente.invoke(historial)
+        historial.append({"role": "assistant", "content": respuesta})
         print("=" * 60)
         print(respuesta)
         print()

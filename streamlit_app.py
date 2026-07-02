@@ -161,8 +161,8 @@ if pregunta:
                 # Instanciamos a OptiBot pasándole el DataFrame
                 agente = get_agent_instance(st.session_state.df)
                 
-                # Le pedimos la respuesta
-                respuesta = agente.invoke(pregunta)
+                # Le pedimos la respuesta enviándole TODO el historial de la conversación
+                respuesta = agente.invoke(st.session_state.messages)
                 
                 # Pintamos en pantalla y guardamos en memoria
                 st.markdown(respuesta)
