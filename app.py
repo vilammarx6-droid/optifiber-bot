@@ -22,10 +22,6 @@ class OptiBotAgent:
             model="command-r",  # o command-r-plus
             temperature=0.1
         )
-        
-        # Por seguridad y límites de contexto de IA, truncamos a 500 productos máximo
-        if len(df) > 500:
-            df = df.head(500)
             
         # Convertimos nuestro DataFrame de Pandas a un formato de texto (Markdown).
         # Así es mucho más fácil que el LLM lo lea y lo entienda.
