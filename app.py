@@ -53,15 +53,23 @@ REGLAS ESTRICTAS:
 
     def invoke(self, messages_history: list) -> str:
         """
-        Esta función recibe el historial de conversación, lo une con las reglas del sistema
-        y le pide a Cohere que genere una respuesta manteniendo el contexto.
+        Esta función recibe el historial de conversación y lo convierte a formato LangChain
+        para que Cohere lo procese correctamente como un chat (evitando errores 422).
         """
-        prompt = f"{self.system_message}\n\nHISTORIAL DE LA CONVERSACIÓN:\n"
+        from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+        
+        # 1. Añadimos el System Prompt (las reglas)
+        langchain_messages = [SystemMessage(content=self.system_message)]
+        
+        # 2. Añadimos todo el historial
         for msg in messages_history:
-            role = "Cliente" if msg["role"] == "user" else "OptiBot"
-            prompt += f"{role}: {msg['content']}\n"
-            
-        response = self.llm.invoke(prompt)
+            if msg["role"] == "user":
+                langchain_messages.append(HumanMessage(content=msg["content"]))
+            else:
+                langchain_messages.append(AIMessage(content=msg["content"]))
+                
+        # 3. Enviamos la lista de objetos en lugar de un string gigante
+        response = self.llm.invoke(langchain_messages)
         return response.content
 
 
