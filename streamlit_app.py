@@ -88,10 +88,16 @@ with st.sidebar:
         )
         submitted = st.form_submit_button("💾 Guardar y actualizar base")
         
-        # Si el usuario subió algo nuevo, lo inyectamos en la sesión activa
         if submitted and uploaded_file:
             try:
-                df = pd.read_csv(uploaded_file)
+                # Intentamos primero con UTF-8
+                try:
+                    df = pd.read_csv(uploaded_file, encoding='utf-8')
+                except UnicodeDecodeError:
+                    # Si falla (muy común si se guardó desde Excel antiguo), usamos latin-1
+                    uploaded_file.seek(0)
+                    df = pd.read_csv(uploaded_file, encoding='latin-1')
+                    
                 st.session_state.df = df
                 st.cache_resource.clear()  # Obligamos a reconstruir el agente con los nuevos datos
                 st.success("Inventario actualizado con éxito.")

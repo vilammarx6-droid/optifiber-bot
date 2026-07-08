@@ -16,11 +16,17 @@ class OptiBotAgent:
     """
     
     def __init__(self, api_key: str, df: pd.DataFrame):
-        # Inicializamos el motor de IA (Cohere) con una temperatura baja (0.2) 
-        # para que sus respuestas sean técnicas, precisas y no alucine datos.
-        self.llm = ChatCohere(temperature=0.2, cohere_api_key=api_key)
-        self.df = df
+        # Configuramos el motor de IA
+        self.llm = ChatCohere(
+            cohere_api_key=api_key,
+            model="command-r",  # o command-r-plus
+            temperature=0.1
+        )
         
+        # Por seguridad y límites de contexto de IA, truncamos a 500 productos máximo
+        if len(df) > 500:
+            df = df.head(500)
+            
         # Convertimos nuestro DataFrame de Pandas a un formato de texto (Markdown).
         # Así es mucho más fácil que el LLM lo lea y lo entienda.
         self.csv_string = df.to_markdown(index=False)
@@ -61,8 +67,10 @@ REGLAS ESTRICTAS:
         # 1. Añadimos el System Prompt (las reglas)
         langchain_messages = [SystemMessage(content=self.system_message)]
         
-        # 2. Añadimos todo el historial
-        for msg in messages_history:
+        # 2. Añadimos solo el historial reciente (últimos 10 mensajes) para no exceder el límite de tokens
+        historial_reciente = messages_history[-10:]
+        
+        for msg in historial_reciente:
             if msg["role"] == "user":
                 langchain_messages.append(HumanMessage(content=msg["content"]))
             else:
