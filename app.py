@@ -19,7 +19,7 @@ class OptiBotAgent:
         # Configuramos el motor de IA
         self.llm = ChatCohere(
             cohere_api_key=api_key,
-            model="command-r",  # o command-r-plus
+            model="command-r-08-2024",
             temperature=0.1
         )
             
